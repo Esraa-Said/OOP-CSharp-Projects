@@ -2,25 +2,21 @@ namespace BankAccountsApp
 {
     public partial class Form1 : Form
     {
+        List<BankAccount> bankAccounts = new List<BankAccount>();
         public Form1()
         {
             InitializeComponent();
 
-            BankAccount bankAccount = new BankAccount("Saldina Nurak");
-
-            BankAccount bankAccount2 = new BankAccount("Elon Musk");
-            
-
-            BankAccount bankAccount3 = new BankAccount("Bill Gates");
+            //BankAccount bankAccount = new BankAccount("Saldina Nurak");
+            //BankAccount bankAccount2 = new BankAccount("Elon Musk");
+            //BankAccount bankAccount3 = new BankAccount("Bill Gates");
 
 
 
-            List<BankAccount> bankAccounts = new List<BankAccount>();
-            bankAccounts.Add(bankAccount);
-            bankAccounts.Add(bankAccount2);
-            bankAccounts.Add(bankAccount3);
+            //bankAccounts.Add(bankAccount);
+            //bankAccounts.Add(bankAccount2);
+            //bankAccounts.Add(bankAccount3);
 
-            BankAccountsGrid.DataSource = bankAccounts;
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -41,6 +37,51 @@ namespace BankAccountsApp
         private void BankAccountsGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
+        }
+
+        private void CreateAccountBtn_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(OwnerName.Text))
+                return;
+            BankAccount bankAccount = new BankAccount(OwnerName.Text);
+            bankAccounts.Add(bankAccount);
+
+            RefreshGrid();
+            OwnerName.Text = string.Empty;
+        }
+
+        private void RefreshGrid()
+        {
+            BankAccountsGrid.DataSource = null;
+            BankAccountsGrid.DataSource = bankAccounts;
+
+        }
+
+        private void DepositBtn_Click(object sender, EventArgs e)
+        {
+            if (BankAccountsGrid.SelectedRows.Count == 1)
+            {
+                BankAccount selectedBankAccount = BankAccountsGrid.SelectedRows[0].DataBoundItem as BankAccount;
+                string message = selectedBankAccount.Deposit(AmountNum.Value);
+                MessageBox.Show(message);
+                RefreshGrid();
+                AmountNum.Value = 0;
+            }
+
+        }
+
+        private void WithdrawBtn_Click(object sender, EventArgs e)
+        {
+            if (BankAccountsGrid.SelectedRows.Count == 1)
+            {
+                BankAccount selectedBankAccount = BankAccountsGrid.SelectedRows[0].DataBoundItem as BankAccount;
+              
+                    string message = selectedBankAccount.Withdraw(AmountNum.Value);
+                    MessageBox.Show(message);
+                    RefreshGrid();
+                    AmountNum.Value = 0;
+                
+            }
         }
     }
 }
