@@ -43,11 +43,22 @@ namespace BankAccountsApp
         {
             if (string.IsNullOrEmpty(OwnerName.Text))
                 return;
-            BankAccount bankAccount = new BankAccount(OwnerName.Text);
-            bankAccounts.Add(bankAccount);
+            if(InterestRateNum.Value > 0)
+            {
+                SavingsAccount savingsAccount = new SavingsAccount(OwnerName.Text, InterestRateNum.Value);
+                bankAccounts.Add(savingsAccount);
+
+            }
+            else 
+            {
+                BankAccount bankAccount = new BankAccount(OwnerName.Text);
+                bankAccounts.Add(bankAccount);
+            }
+           
 
             RefreshGrid();
             OwnerName.Text = string.Empty;
+            InterestRateNum.Value = 0;
         }
 
         private void RefreshGrid()
@@ -75,13 +86,18 @@ namespace BankAccountsApp
             if (BankAccountsGrid.SelectedRows.Count == 1)
             {
                 BankAccount selectedBankAccount = BankAccountsGrid.SelectedRows[0].DataBoundItem as BankAccount;
-              
-                    string message = selectedBankAccount.Withdraw(AmountNum.Value);
-                    MessageBox.Show(message);
-                    RefreshGrid();
-                    AmountNum.Value = 0;
-                
+
+                string message = selectedBankAccount.Withdraw(AmountNum.Value);
+                MessageBox.Show(message);
+                RefreshGrid();
+                AmountNum.Value = 0;
+
             }
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
